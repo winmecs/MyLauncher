@@ -11,12 +11,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.IOException;
+
 public class MyLauncher extends AppCompatActivity {
+
+    private MyServer server;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_launcher);
+
+        try {
+            server = new MyServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         ImageView chromeIcon = (ImageView) findViewById(R.id.chromeButton);
         chromeIcon.setImageDrawable(getActivityIcon(this, "com.android.calculator2", "com.android.calculator2.Calculator"));
@@ -41,5 +51,4 @@ public class MyLauncher extends AppCompatActivity {
     public void onBackPressed(){
 
     }
-
 }
