@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,18 @@ import java.io.OutputStream;
 public class MyLauncher extends AppCompatActivity {
 
     private MyServer server;
+
+    static public String timezone = null;
+
+    private Handler handler = new Handler();
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            startTimeacticity();
+            handler.postDelayed(this, 4000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,22 +54,14 @@ public class MyLauncher extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ImageView chromeIcon = (ImageView) findViewById(R.id.chromeButton);
-        chromeIcon.setImageDrawable(getActivityIcon(this, "com.android.calculator2", "com.android.calculator2.Calculator"));
+        handler.postDelayed(runnable,4000);
     }
 
-    public static Drawable getActivityIcon(Context context, String packageName, String activityName) {
-        PackageManager pm = context.getPackageManager();
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName(packageName, activityName));
-        ResolveInfo resolveInfo = pm.resolveActivity(intent, 0);
+    public void startTimeacticity() {
+        Intent timeintent = new Intent(this, TimeActivity.class);
+            timeintent.putExtra("timezone",timezone);
+            startActivity(timeintent);
 
-        return resolveInfo.loadIcon(pm);
-    }
-
-    public void onChromeButtonClick(View v) {
-        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.android.calculator2");
-        startActivity(launchIntent);
     }
 
 //   handle the back button
@@ -64,8 +69,17 @@ public class MyLauncher extends AppCompatActivity {
     public void onBackPressed(){
 
     }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        handler.removeCallbacks(runnable);
+    }
 
-
+    @Override
+    protected void onResume(){
+        super.onResume();
+        handler.postDelayed(runnable,4000);
+    }
     private void copyAssets() {
         AssetManager assetManager = getAssets();
         String[] files = null;

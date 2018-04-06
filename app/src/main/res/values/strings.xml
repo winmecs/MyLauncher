@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyLauncher</string>
+    <string name="title_activity_time">TimeActivity</string>
 </resources>
